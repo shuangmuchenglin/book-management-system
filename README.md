@@ -13,5 +13,11 @@
 
 先创建一个数据库（名称nnn），然后创建四张表，建表语句在create_table文件夹下
 
+效果：
+
+![Image text](https://github.com/shuangmuchenglin/book-management-system/blob/book-management-system/img/2.jpg)
+
+![Image text](https://github.com/shuangmuchenglin/book-management-system/blob/book-management-system/img/1.jpg)
+
 
 有问题或建议欢迎询问，QQ1476154032
