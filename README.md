@@ -17,4 +17,4 @@
 ![Image text](https://github.com/shuangmuchenglin/book-management-system/blob/book-management-system/img/1.jpg)
 
 
-有问题或建议欢迎询问，QQ1476154032
+有问题或建议欢迎在Issues中提出
