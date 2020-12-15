@@ -1,0 +1,300 @@
+import java.sql.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.table.*;
+
+public class AdmGui implements ActionListener
+{
+	Font font= new Font("宋体",Font.BOLD,12);//添加字体font
+    JFrame f=new JFrame("管理员");
+    String[] names;
+    String[] ID;
+    String[] press;
+    int i,j,RowNum,ColNum;
+    Object[][] info;
+    JTable table;
+    TextField edit1=new TextField(10);
+    TextField edit2=new TextField(10);
+    TextField edit3=new TextField(10);
+    JLabel label1=new JLabel("输入图书名称：");
+    JLabel label2=new JLabel("输入图书编号：");
+    JLabel label3=new JLabel("输入出版社名称：");
+    JButton b=new JButton("查询");
+    
+    MenuBar br=new MenuBar();
+    Menu jm=new Menu("个人用户");
+    Menu jm1=new Menu("用户管理");
+    Menu jm2=new Menu("图书管理");
+    
+    MenuItem t1=new MenuItem("注销用户");
+    MenuItem t2=new MenuItem("借阅查询");
+    MenuItem t3=new MenuItem("删除用户");
+    MenuItem t4=new MenuItem("查询用户");  
+    MenuItem t5=new MenuItem("删除图书");
+    MenuItem t6=new MenuItem("添加图书");
+    MenuItem t7=new MenuItem("修改图书");
+    
+	public static void main(String args[]) 
+	{
+		new AdmGui();		
+	}
+	
+//响应按钮的事件，完成查询功能
+	public void actionPerformed(ActionEvent e)
+	{
+		if(e.getActionCommand().equals("添加图书"))
+		{
+			Admtianjiatushu scts=new Admtianjiatushu();
+		}
+		if(e.getActionCommand().equals("修改图书"))
+		{
+			Admxiugaitushu scts=new Admxiugaitushu();
+		}
+		if(e.getActionCommand().equals("删除图书"))
+		{
+			Admshanchutushu scts=new Admshanchutushu();
+		}
+		if(e.getActionCommand().equals("查询用户"))
+		{
+			Admchaxunyonghu cxyh=new Admchaxunyonghu();
+		}
+		if(e.getActionCommand().equals("删除用户"))
+		{
+			Admshanchuyonghu scyh=new Admshanchuyonghu();
+		}
+		if(e.getActionCommand().equals("借阅查询"))
+		{
+			Admchaxunjieyue admchaxunjieyue=new Admchaxunjieyue();
+		}
+		if(e.getActionCommand().equals("注销用户"))
+	    {
+			 int result = JOptionPane.showConfirmDialog(f, "你确定注销吗？");			    
+	            if(result==JOptionPane.OK_OPTION)   
+	            {
+                f.setVisible(false);
+                denglujiemian DENGLUJIEMIAN=new denglujiemian();
+	            }
+	
+	    } 
+	
+		try{
+		
+			
+        	//装载驱动程序
+        	  Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+       
+            //创建连接
+            Connection con=DriverManager.getConnection 
+            		("jdbc:sqlserver://localhost:1433;DatabaseName=nnn","sa","123456");      
+		
+            Statement stmt=con.createStatement();
+            String name=edit1.getText();
+            String ID=edit2.getText();
+            String press=edit3.getText();
+            
+            
+            if(name.length()!=0)
+            {
+            ResultSet rs1=stmt.executeQuery("select * from bookinformation where bookname like"+"'%"+name+"%'");
+         // 清除原有行
+            DefaultTableModel tableModel= (DefaultTableModel)table.getModel();
+            tableModel.setRowCount(0); 
+            //添加查询到的记录集
+            while (rs1.next())
+            {
+                 String[] arr=new String[5];
+                 arr[0]=rs1.getString("Bookid");
+                 arr[1]=rs1.getString("bookname");
+                 arr[2]=rs1.getString("Bookprice");
+                 arr[3]=rs1.getString("Booknumber");
+                 arr[4]=rs1.getString("Bookpress");
+                 tableModel.addRow(arr);
+            }
+
+            //刷新表格，即重新绘制
+            table.invalidate();
+
+            rs1.close();
+            stmt.close();
+            con.close();
+            }
+            
+            if(ID.length()!=0)
+            {
+            ResultSet rs2=stmt.executeQuery("select * from bookinformation where bookid like"+"'%"+ID+"%'");
+         // 清除原有行
+            DefaultTableModel tableModel= (DefaultTableModel)table.getModel();
+            tableModel.setRowCount(0); 
+            //添加查询到的记录集
+            while (rs2.next())
+            {
+                 String[] arr=new String[5];
+                 arr[0]=rs2.getString("Bookid");
+                 arr[1]=rs2.getString("bookname");
+                 arr[2]=rs2.getString("Bookprice");
+                 arr[3]=rs2.getString("Booknumber");
+                 arr[4]=rs2.getString("Bookpress");
+                 tableModel.addRow(arr);
+            }
+
+            //刷新表格，即重新绘制
+            table.invalidate();
+
+            rs2.close();
+            stmt.close();
+            con.close();
+           }
+            
+            if(press.length()!=0)
+            {ResultSet rs3=stmt.executeQuery("select * from bookinformation where bookpress like"+"'%"+press+"%'");
+         // 清除原有行
+            DefaultTableModel tableModel= (DefaultTableModel)table.getModel();
+            tableModel.setRowCount(0); 
+            //添加查询到的记录集
+            while (rs3.next())
+            {
+                 String[] arr=new String[5];
+                 arr[0]=rs3.getString("Bookid");
+                 arr[1]=rs3.getString("bookname");
+                 arr[2]=rs3.getString("Bookprice");
+                 arr[3]=rs3.getString("Booknumber");
+                 arr[4]=rs3.getString("Bookpress");
+                 tableModel.addRow(arr);
+            }
+
+            //刷新表格，即重新绘制
+            table.invalidate();
+
+            rs3.close();
+            stmt.close();
+            con.close();
+           }
+            if(name.length()==0&&ID.length()==0&&press.length()==0)
+            {
+            	ResultSet rs4=stmt.executeQuery("select * from bookinformation");
+                DefaultTableModel tableModel= (DefaultTableModel)table.getModel();
+                tableModel.setRowCount(0); 
+                while (rs4.next())
+                {
+                     String[] arr=new String[5];
+                     arr[0]=rs4.getString("Bookid");
+                     arr[1]=rs4.getString("bookname");
+                     arr[2]=rs4.getString("Bookprice");
+                     arr[3]=rs4.getString("Booknumber");
+                     arr[4]=rs4.getString("Bookpress");
+                     tableModel.addRow(arr);
+                }
+                table.invalidate();
+                rs4.close();
+                stmt.close();
+                con.close();
+                }
+            
+		}
+		catch(Exception ex)
+	    {
+	    	System.out.println(ex.getMessage());
+	    }
+	}
+
+	public AdmGui()
+	{
+         try{
+					
+        	 Class.forName( "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            Connection con=DriverManager.getConnection             
+            		("jdbc:sqlserver://localhost:1433;DatabaseName=nnn","sa","123456");      
+		
+            Statement stmt=con.createStatement();
+		    //构造JTable
+            ResultSet rs=stmt.executeQuery("select count(*) from bookinformation");
+            rs.next();
+            RowNum=rs.getInt(1);
+                         
+            rs=stmt.executeQuery("select * from bookinformation");
+            ResultSetMetaData rsmd=rs.getMetaData();              
+
+            
+            ColNum=rsmd.getColumnCount();
+  
+             names=new String[ColNum];     
+             for (i=1;i<=ColNum;i++) names[i-1]=rsmd.getColumnName(i);
+
+            info=new Object[RowNum][];
+            i=0;
+            while (rs.next())
+            {
+                info[i]=new Object[ColNum];
+                for (j=1;j<=ColNum;j++)
+                {
+                   info[i][j-1]=rs.getObject(j);
+                }
+                i++;
+            }
+            
+            DefaultTableModel model = new DefaultTableModel(info,names);
+           
+            table=new JTable(model); 
+            table.setBackground(new Color(255,250,205));
+            table.setFont(font);
+            edit1.setFont(font);
+            edit2.setFont(font);
+            edit3.setFont(font);
+            table.setPreferredScrollableViewportSize(new Dimension(400,50));
+ 
+            b.addActionListener(this);
+            t1.addActionListener(this);
+            t2.addActionListener(this);
+            t2.addActionListener(this);
+            t3.addActionListener(this);
+            t4.addActionListener(this);
+            t5.addActionListener(this);
+            t6.addActionListener(this);
+            t7.addActionListener(this);
+            Panel panel=new Panel();
+            panel.add(label1);
+            panel.add(edit1);
+            panel.add(label2);
+            panel.add(edit2);
+            panel.add(label3);
+            panel.add(edit3);
+            f.add(panel,BorderLayout.NORTH);
+            f.add(b,BorderLayout.SOUTH);
+            f.getContentPane().add(new JScrollPane(table));
+          //添加菜单
+            f.setMenuBar(br);
+            br.add(jm);
+            br.add(jm1);
+            br.add(jm2); 
+            jm.add(t1);
+            jm.add(t2);          
+            jm1.add(t3);
+            jm1.add(t4);
+            jm2.add(t5);
+            jm2.add(t6);
+            jm2.add(t7);
+           
+            //响应窗口的关闭事件
+            f.addWindowListener(new WindowAdapter()
+            {
+            		@SuppressWarnings("unused")
+					public void windowClosiing(WindowEvent ew)
+            	    {System.exit(0);}
+            		});
+            
+            f.setSize(700, 400);
+            f.setVisible(true);
+            f.setLocation(300,200);
+            rs.close();
+            stmt.close();
+            con.close();
+            
+		}
+		catch(Exception e)
+	    {
+	    	System.out.println(e.getMessage());
+	    }
+        
+	}
+}
